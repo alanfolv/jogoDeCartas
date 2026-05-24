@@ -26,7 +26,9 @@ Lista* lista_insere(Lista* l,Cards card){
 void lista_imprime(Lista* l){
     Lista* p;
     for(p = l; p != NULL; p = p->prox){
-        printf("info: %d\n",p->info);
+        printf("Cor: %d\n",p->info.cor);
+        printf("Simbolo: %d\n",p->info.simbolo);
+
     }
 }
 Lista* lista_busca(Lista* l, Cards elem){

@@ -21,7 +21,7 @@ void lista_imprime(Lista* l);
 
 int lista_vazia(Lista* l );
 
-Lista* lista_busca(Lista* l, int elem);
+Lista* lista_busca(Lista* l, Cards elem);
 
 void lista_libera(Lista* l );
 

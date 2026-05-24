@@ -8,9 +8,10 @@ Lista*  generate_cards(){
     Lista* cheap = lista_cria();
     
     int numberOfColors = 4;
-    int numberOfNumbers = 10;
+    int numberOfNumbers = 9;
+    
     for(int i = 1; i < numberOfColors+1; i++ ){
-        for(int j = 1; j < numberOfColors+1; j++ ){
+        for(int j = 1; j < numberOfNumbers+1; j++ ){
             // adaptando as listas para o tipo absrtato passado em aula, só espero que isso funcione
             Cards card;
             card.cor = i;
@@ -20,10 +21,12 @@ Lista*  generate_cards(){
 
     }
     //Esta função deve gerar um baralho de 4 cores com simbolos de 1 - 10
+    lista_imprime(cheap);
     return cheap;
 }
 void startGame(){
     printf("entrou na função!!");
+    Lista*  cheap = generate_cards();
 }
 void startMenu(){
     int op = 0;
