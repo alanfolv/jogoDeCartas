@@ -1,33 +1,60 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-void bubble_sort (int tamanho, int *vet){
-    int i, j, aux;
+#include "queues.h"
 
-    for (i = 0; i < tamanho; i++) {
-        for (j = 0; j < tamanho - i - 1; j++) {
-            if (vet[j] > vet[j + 1]) {  // VERIFICAÇAO PARA COLOCAR O MAIOR ELEMENTO NO FINAL
+struct no{
+    Jogador jogador;
+    struct no* prox;
+};
 
-                aux = vet[j];         // TROCA DE ELEMENTOS
-                vet[j] = vet[j + 1];
-                vet[j + 1] = aux;
-            }
-        }
+struct fila{
+    No* ini;
+    No* fim;
+
+};
+
+Fila* fila_cria(void){
+    Fila* f = (Fila*) malloc(sizeof(Fila));
+    f->ini = f->fim = NULL;
+    return f;
+}
+
+void fila_insere(Fila* f, Jogador j){
+    No* novo = (No*) malloc(sizeof(No));
+    novo->jogador= j;
+    novo->prox = NULL;
+    if(f->fim != NULL){
+        f->fim->prox = novo;
+    }else{
+        f->ini = novo;
     }
 }
-main(){
-    int i, tamanho;
-    printf("Digite o tamanho do vetor: ");
-    scanf("%d", &tamanho);
-    int *vet = (int*)malloc(tamanho * sizeof(int));
-    printf("Digite os elementos do vetor: ");
-    for(i=0; i<tamanho; i++){
-        scanf("%d", &vet[i]);
+
+Jogador fila_retira(Fila* f){
+    if(fila_vazia(f)){
+        printf("fila de turnos vazia.\n");
+        exit(1);
     }
-    bubble_sort(tamanho, vet);
-    printf("Vetor ordenado: ");
-    for(i=0; i<tamanho; i++){
-        printf("%d ", vet[i]);
+    No* t = f->ini;
+    Jogador j = t->jogador;
+    f->ini = t->prox;
+    if(f->ini ==NULL){
+        f->fim = NULL;
     }
-    free(vet);
+    free(t);
+    return j;
+}
+int fila_vazia(Fila* f ){
+    return (f->ini == NULL);
+}
+
+void fila_libera(Fila* f){
+    No* q = f->ini;
+    while(q != NULL){
+        No* t = q->prox;
+        free(q);
+        q = t;
+    }
+    free(f);
 }
