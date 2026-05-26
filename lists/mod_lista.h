@@ -1,7 +1,7 @@
 #ifndef MOD_LISTA_H
 #define MOD_LISTA_H
 
-typedef struct lista Lista;
+
 typedef struct{
     int cor;
     int simbolo;
@@ -11,7 +11,11 @@ typedef struct{
     //4 - Vermelho
     // O simbolo varia de 1 até 9 e os caracteres especiais 
 }Cards;
+typedef struct lista Lista;
 
+Cards lista_info(Lista* l);
+
+Lista* lista_prox(Lista* l);
 
 Lista* lista_cria();
 

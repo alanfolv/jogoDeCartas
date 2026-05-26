@@ -9,6 +9,17 @@ struct lista{
     struct lista* prox;
 };
 
+
+Cards lista_info(Lista* l) {
+    return l->info;
+}
+
+Lista* lista_prox(Lista* l) {
+    return l->prox;
+}
+
+
+
 Lista* lista_cria(){
     return NULL;
 }
