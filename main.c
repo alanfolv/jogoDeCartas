@@ -6,103 +6,104 @@
 
 #define numeroDeCartasMax 52
 
-Lista*  generate_cards(){
-    Lista* cheap = lista_cria();
+Lista* generate_cards() {
+    Lista* deck = lista_cria(); // "deck" é baralho em inglês
     
     int numberOfColors = 4;
-    int numberOfNumbers = 9;
+    int numberOfNumbers = 10; // Corrigido para 10 de acordo com seu comentário
 
-    for(int i = 1; i < numberOfColors+1; i++ ){
-        for(int j = 1; j < numberOfNumbers+1; j++ ){
-            // adaptando as listas para o tipo absrtato passado em aula, só espero que isso funcione
+    // i <= numberOfColors e j <= numberOfNumbers para pegar de 1 a 10 e 1 a 4
+    for(int i = 1; i <= numberOfColors; i++) {
+        for(int j = 1; j <= numberOfNumbers; j++) {
             Cards card;
             card.cor = i;
             card.simbolo = j;
-            cheap = lista_insere(cheap,card);
+            deck = lista_insere(deck, card);
         }
-
     }
-    //Esta função deve gerar um baralho de 4 cores com simbolos de 1 - 10
-    lista_imprime(cheap);
-
-    printf("___________________________________________________");
-    return cheap;
-}
-//numero = minimo + rand() \% (maximo - minimo + 1)\)
-int randPos(int min,int max){
-    srand(time(NULL));
     
-    
-    int randomPos =  min + rand()%(max - min + 1);
-
-    return randomPos;
+    // Gera um baralho de 4 cores com simbolos de 1 - 10
+    lista_imprime(deck);
+    printf("___________________________________________________\n");
+    return deck;
 }
-Lista* shuffleCards(Lista* cheap){
-    // Isto deve iniciar o vetor auxiliar de alunos para o embaralhamento
 
+int randPos(int min, int max) {
+    return min + rand() % (max - min + 1);
+}
+
+Lista* shuffleCards(Lista* deck) {
     Lista* p;
-    int i = 0;
-    int posFree = numeroDeCartasMax;
+    int count = 0;
     Cards vetAux[numeroDeCartasMax] = {0};
     
-    for(p = cheap; p != NULL && i < numeroDeCartasMax; p = lista_prox(p)){
-        int i = randPos(0,posFree);
-        if(vetAux[i] != 0 ){
-            vetAux[i] = lista_info(p);
-        }else{
-            posFree--;
-        }
-        
-    }
-
-    /*printf("Debugando o vetAux:\n");
-    int j = 0;
-    for(p = cheap; p != NULL && j < numeroDeCartasMax; p = lista_prox(p)){
-        printf("cor:%d ----- simbolo: %d\n",vetAux[j].cor, vetAux[j].simbolo);
-        j++;
-    }*/
-
-    // adicionando o vetor auxiliar na stack
-    Pilha* stackCards = pilha_cria();
-    for(int i = 0 ; i < numeroDeCartasMax;i++){
-        pilha_push(stackCards,vetAux[numeroDeCartasMax]);
+    // CORREÇÃO: Faltava incrementar o 'count' dentro do loop!
+    for(p = deck; p != NULL && count < numeroDeCartasMax; p = lista_prox(p)) {
+        vetAux[count] = lista_info(p);
+        count++; // Adicionado para andar no vetor
     }
     
+    // Algoritmo de Fisher-Yates
+    for (int i = count - 1; i > 0; i--) {
+        int j = randPos(0, i); 
+        Cards temp = vetAux[i];
+        vetAux[i] = vetAux[j];
+        vetAux[j] = temp;
+    }
+    
+    // CORREÇÃO: Imprimir apenas até 'count' (o total real de cartas)
+    for (int i = 0; i < count; i++) {
+        printf(">>>%d --- %d\n", vetAux[i].cor, vetAux[i].simbolo);
+    }
 
-    pilha_imprime(numeroDeCartasMax,stackCards);
-    return 0;
+    // CORREÇÃO: A função exigia retorno do tipo Lista*. 
+    // Reconstruindo a lista embaralhada:
+    Lista* shuffledDeck = lista_cria();
+    for(int i = 0; i < count; i++) {
+        shuffledDeck = lista_insere(shuffledDeck, vetAux[i]);
+    }
+    
+    return shuffledDeck;
 
+    /* // OBS: Se você quiser usar a Pilha, a assinatura da função deve ser Pilha* shuffleCards(Lista* deck)
+    Pilha* stackCards = pilha_cria();
+    for(int i = 0 ; i < count ;i++){
+        pilha_push(stackCards, vetAux[i]);
+    }
+    pilha_imprime(numeroDeCartasMax, stackCards);
+    return stackCards;
+    */
 }
-void startGame(){
-    printf("entrou na função!!");
-    Lista*  cheap = generate_cards();
-    shuffleCards(cheap);
 
+void startGame() {
+    printf("Entrou na função!!\n\n");
+    Lista* deck = generate_cards();
+    
+    // Agora capturamos o retorno da lista embaralhada
+    Lista* shuffledDeck = shuffleCards(deck); 
 }
-void startMenu(){
+
+void startMenu() {
     int op = 0;
-    do{
+    do {
+        printf("\nDigite a opção desejada:\n1 - Jogar\n2 - Sair\n> ");
+        scanf("%d", &op);
         
-        printf("digite a opção desejada\n 1- Jogar\n2-sair");
-        scanf("%d",&op);
-        switch(op){
+        switch(op) {
             case 1:
                 startGame();
                 break;
             case 2:
-                printf("Até mais!");
+                printf("Até mais!\n");
                 break;
             default:
-                printf("Digite uma opção válida");
-
+                printf("Digite uma opção válida!\n");
          }
-    }while(op!=2);
-    
+    } while(op != 2);
 }
-int main(){
 
+int main() {
+    srand(time(NULL));
     startMenu();
-
     return 0;
 }
-
