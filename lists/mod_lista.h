@@ -29,4 +29,6 @@ Lista* lista_busca(Lista* l, Cards elem);
 
 void lista_libera(Lista* l );
 
+Lista* lista_remove_elemento(Lista*l, Cards elem);
+
 #endif

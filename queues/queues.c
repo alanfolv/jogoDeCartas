@@ -29,6 +29,7 @@ void fila_insere(Fila* f, Jogador j){
     }else{
         f->ini = novo;
     }
+    f->fim = novo;
 }
 
 Jogador fila_retira(Fila* f){
@@ -57,4 +58,63 @@ void fila_libera(Fila* f){
         q = t;
     }
     free(f);
+}
+
+void jogador_compra_carta(Jogador* j, Cards carta){
+    j->mao = lista_insere(j->mao , carta);
+    j->qtd_cartas++;
+}
+
+void  jogador_mostra_mao(Jogador j){
+    printf("\n Mão do jogador %s (%d cartas):\n", j.nome, j.qtd_cartas):
+
+    Lista* p = j.mao;
+    int index = 1;
+    while(p != NULL){
+        Cards c = lista_info(p);
+        printf("  [%d] ", index);
+
+        //cores ansi para o texto no terminal, ao mostrar a mao vai mostrar o simbolo e a cor do 
+        // texto referente a carta
+        switch(c.cor){
+            case 1: // Amarelo
+                printf("\033[1;33m%d\033[0m\n", c.simbolo);
+                break;
+            case 2: // Verde
+                printf("\033[1;32m%d\033[0m\n", c.simbolo);
+                break;
+            case 3: // Azul
+                printf("\033[1;34m%d\033[0m\n", c.simbolo);
+                break;
+            case 4: // Vermelho
+                printf("\033[1;31m%d\033[0m\n", c.simbolo);
+                break;
+            default:
+                printf("%d\n", c.simbolo); 
+        }
+
+        p = lista_prox(p);
+        index++
+    }
+    printf("\n");
+}
+
+Cards jogador_remove_carta(Jogador* j, in indice){
+    Lista* p = j->mao;
+    int cont = 1;
+    
+    while (p != NULL && cont < indice) {
+        p = lista_prox(p);
+        cont++;
+    }
+    
+    if (p == NULL) {
+        printf("indice invalidoo.\n");
+        exit(1);
+    }
+    
+    Cards escolhida = lista_info(p);
+    j->mao = lista_remove_elemento(j->mao, escolhida);
+    j->qtd_cartas--;
+    return escolhida;
 }

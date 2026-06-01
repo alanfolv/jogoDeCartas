@@ -59,3 +59,21 @@ void lista_libera(Lista* l){
         p = t;
     }
 }
+Lista* lista_remove_elemento(Lista*l, Cards elem){
+    Lista* ant = NULL;
+    Lista* p = l;
+
+    while(p =! NULL && (p->info.cor != elem.cor || p->info.simbolo != elem.simbolo)){
+        ant = p;
+        p = p->prox;
+    }
+    if (p == NULL) return l;
+
+    if (ant == NULL){
+        l = p->prox;
+    }else{
+        ant->prox = p->prox;
+    }
+    free(p);
+    return l;
+}
