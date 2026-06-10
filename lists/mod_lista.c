@@ -63,7 +63,7 @@ Lista* lista_remove_elemento(Lista*l, Cards elem){
     Lista* ant = NULL;
     Lista* p = l;
 
-    while(p =! NULL && (p->info.cor != elem.cor || p->info.simbolo != elem.simbolo)){
+    while(p != NULL && (p->info.cor != elem.cor || p->info.simbolo != elem.simbolo)){
         ant = p;
         p = p->prox;
     }

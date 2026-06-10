@@ -37,19 +37,3 @@ void bubble_sort_cards(Cards* vet, int tamanho) {
         }
     }
 }
-main(){
-    int i, tamanho;
-    printf("Digite o tamanho do vetor: ");
-    scanf("%d", &tamanho);
-    int *vet = (int*)malloc(tamanho * sizeof(int));
-    printf("Digite os elementos do vetor: ");
-    for(i=0; i<tamanho; i++){
-        scanf("%d", &vet[i]);
-    }
-    bubble_sort(tamanho, vet);
-    printf("Vetor ordenado: ");
-    for(i=0; i<tamanho; i++){
-        printf("%d ", vet[i]);
-    }
-    free(vet);
-}
