@@ -261,4 +261,4 @@ int jogador_seleciona_carta_setas(Jogador j, Cards carta_mesa) {
         
     }
     
-        
+} 
