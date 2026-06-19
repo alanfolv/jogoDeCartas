@@ -4,6 +4,14 @@
 #include "queues/queues.h"
 #include "lists/mod_lista.h"
 #include "stacks/mod_pilha.h"
+#ifdef _WIN32
+    #define CLEAR_SCREEN() system("cls")
+    #define PAUSE() system("pause")
+#else
+    #define CLEAR_SCREEN() system("clear")
+    int getch(void); // Declaração para usar o getch customizado do Linux
+    #define PAUSE() do { printf("\nPressione qualquer tecla para continuar..."); getch(); } while(0)
+#endif
 
 #define numeroDeCartasMax 52
 

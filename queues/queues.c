@@ -2,7 +2,50 @@
 #include<stdlib.h>
 #include<string.h>
 #include "queues.h"
-#include<conio.h>
+#ifdef _WIN32
+    #include <conio.h>
+    #define CLEAR_SCREEN() system("cls")
+#else
+    #include <unistd.h>
+    #include <termios.h>
+    #define CLEAR_SCREEN() system("clear")
+    int getch(void) {
+        struct termios oldattr, newattr;
+        int ch;
+        tcgetattr(STDIN_FILENO, &oldattr);
+        newattr = oldattr;
+        newattr.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
+        ch = getchar();
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
+        return ch;
+    }
+#endif
+
+int obter_comando() {
+    int tecla = getch();
+    
+    #ifdef _WIN32
+    if (tecla == 0 || tecla == 224) {
+        tecla = getch();
+        if (tecla == 75 || tecla == 72) return 1; // Esquerda / Cima
+        if (tecla == 77 || tecla == 80) return 2; // Direita / Baixo
+    }
+    if (tecla == 27) return 27; // ESC
+    if (tecla == 13) return 13; // ENTER
+    #else
+    if (tecla == 10) return 13; // ENTER no Linux
+    #endif
+    
+    // Suporte para WASD (útil no Linux)
+    if (tecla == 'a' || tecla == 'A' || tecla == 'w' || tecla == 'W') return 1; 
+    if (tecla == 'd' || tecla == 'D' || tecla == 's' || tecla == 'S') return 2; 
+    if (tecla == 'q' || tecla == 'Q' || tecla == 27) return 27;                 
+    if (tecla == 13) return 13;
+
+    return -1;
+}
+
 struct no{
     Jogador jogador;
     struct no* prox;
@@ -153,14 +196,13 @@ int checar_vitoria(Jogador j) {
 
 int jogador_seleciona_carta_setas(Jogador j, Cards carta_mesa) {
     int cursor = 1; // Começa selecionando a primeira carta
-    int tecla;
+    int comando;
 
     if (j.qtd_cartas == 0) return 0; // Se não tem cartas, retorna 0 (comprar)
 
     do {
-        // Limpa o terminal para redesenhar a mão atualizada
-        // windows "cls", no linux "clear"
-        system("cls"); 
+        CLEAR_SCREEN();
+        
         printf("\n===================================================");
         printf("\nCARTA NA MESA: ");
         switch(carta_mesa.cor) {
@@ -200,24 +242,23 @@ int jogador_seleciona_carta_setas(Jogador j, Cards carta_mesa) {
         }
 
         // Captura a tecla pressionada
-        tecla = getch();
+        comando = obter_comando();
 
         // Se for uma tecla especial (setas), getch() retorna 0 ou 224 primeiro
-        if (tecla == 0 || tecla == 224) {
-            tecla = getch(); // Pega o código real da tecla
-            
-            if (tecla == 75) { // Seta para a ESQUERDA ou CIMA (dependendo do terminal)
-                if (cursor > 1) cursor--;
-            } 
-            else if (tecla == 77) { // Seta para a DIREITA ou BAIXO
-                if (cursor < j.qtd_cartas) cursor++;
-            }
+        if (comando == 1) {
+            if(cursor > 1)cursor--;
         }
-        else if (tecla == 27) { // 27 é o código do botão [ESC]
-            return 0; // Usuário desistiu ou quer comprar
+        else if(comando ==2){
+            if(cursor <j.qtd_cartas) cursor++;
+        }
+        else if(comando == 27){
+            return 0;
         }
 
-    } while (tecla != 13); // 13 é o código do botão [ENTER]
-
-    return cursor; // Retorna o índice da carta confirmada
-}
+    } while (comando != 13);
+    {
+        return cursor;
+        
+    }
+    
+        
