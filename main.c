@@ -11,7 +11,7 @@ Lista* generate_cards() {
     Lista* deck = lista_cria(); // "deck" é baralho em inglês
     
     int numberOfColors = 4;
-    int numberOfNumbers = 10; // Corrigido para 10 de acordo com seu comentário
+    int numberOfNumbers = 10; 
 
     // i <= numberOfColors e j <= numberOfNumbers para pegar de 1 a 10 e 1 a 4
     for(int i = 1; i <= numberOfColors; i++) {
@@ -38,7 +38,7 @@ Lista* shuffleCards(Lista* deck) {
     int count = 0;
     Cards vetAux[numeroDeCartasMax] = {0};
     
-    // CORREÇÃO: Faltava incrementar o 'count' dentro do loop!
+    
     for(p = deck; p != NULL && count < numeroDeCartasMax; p = lista_prox(p)) {
         vetAux[count] = lista_info(p);
         count++; // Adicionado para andar no vetor
@@ -52,12 +52,12 @@ Lista* shuffleCards(Lista* deck) {
         vetAux[j] = temp;
     }
     
-    // CORREÇÃO: Imprimir apenas até 'count' (o total real de cartas)
+    
     for (int i = 0; i < count; i++) {
         printf(">>>%d --- %d\n", vetAux[i].cor, vetAux[i].simbolo);
     }
 
-    // CORREÇÃO: A função exigia retorno do tipo Lista*. 
+    
     // Reconstruindo a lista embaralhada:
     Lista* shuffledDeck = lista_cria();
     for(int i = 0; i < count; i++) {
